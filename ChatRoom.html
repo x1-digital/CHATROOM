@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+	<title>Chat Room</title>
+	<script src="http://cdn.pubnub.com/pubnub.min.js"></script>
+	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.1.1/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="ChatRoom.css">
+<style>
+	body { 
+		position: absolute;
+		background-image: url("SessionHall_2d.jpg");
+		background-repeat:no-repeat;
+		background-size:100vw 100vh;
+	}
+</style>
+</head>
+<body>
+	
+	<div>
+
+	<textarea readonly id="userList" class="table-bordered userList" cols="30" rows="10"></textarea>
+
+	<button id="leaveButton" class="btn btn-danger leaveButton" onclick="leave()">Leave</button>
+
+	<textarea readonly id="chatHistory" class="table-bordered chatHistory" cols="30" rows="10"></textarea>
+
+	<input type="text" id="message" placeholder="Enter your message here" class="message"/>
+
+	<button id="sendButton" class="btn btn-primary sendButton">Send</button>
+
+	</div>
+	<script type="text/javascript">
+		(function() { 
+			var publish_key = 'pub-c-58cdafe9-b28b-447b-b0c7-ffba6e339748';
+			var subscribe_key = 'sub-c-214fce06-4c80-11ec-b96c-ae318225c01e';
+			channel = 'ChatRoomDemo';
+			var username = window.location.search.substring(1).split('=')[1];
+			pubnub =PUBNUB.init({
+				publish_key : publish_key,
+				subscribe_key : subscribe_key,
+				uuid : username
+			});
+
+			pubnub.subscribe({
+				channel : channel,
+				callback : function(message) { 
+					$('#chatHistory')[0].innerHTML = message + '&#13;&#10;' + $('#chatHistory')[0].innerHTML; 
+				},
+				presence : function(state) { 
+					if (state.action == 'join') {
+						if ($('#userList').text().indexOf(state.uuid) == -1) {
+							$('#userList')[0].innerHTML = state.uuid + '&#13;&#10;' + $('#userList')[0].innerHTML;
+						}
+					} else if (state.action == 'leave' || state.action == 'timeout') { 
+						var index = $('#userList')[0].innerHTML.indexOf(state.uuid);
+						if ( index !== -1) {
+							$('#userList')[0].innerHTML = 
+								$('#userList')[0].innerHTML.substring(0,index) + 
+								$('#userList')[0].innerHTML.substring(index+state.uuid.length+4);
+						}
+					}
+					
+				}
+			});
+
+			pubnub.bind('click', pubnub.$('sendButton'), function(e) { 
+				pubnub.publish({
+					channel : channel, 
+					message : pubnub.get_uuid() + ' : '  + $('#message').val()
+				});
+				$('#message').val('');
+			});
+		})();
+	</script>
+
+	<script type="text/javascript">
+		function leave() { 
+			pubnub.unsubscribe({
+				channel : channel,
+				callback : function() {
+					window.location = 'Login.html';
+				}
+			});
+		}
+	</script>
+
+
+</body>
+</html>

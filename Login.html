@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<head>
+	<title>Chat Room</title>
+	<script src="http://cdn.pubnub.com/pubnub.min.js"></script>
+	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.1.1/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="ChatRoom.css">
+	<link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+
+	<style>
+		body { 
+			position: absolute;
+			background-image: url("1900851.png");
+			background-repeat:no-repeat;
+			background-size:100vw 100vh;
+		}
+	</style>
+
+</head>
+<body>
+
+	<div class="menu-container">
+        <div class="button">
+           360 ENVIRONMENT SAMPLE
+           <span class="fas fa-bars"></span>
+        </div>
+        <ul>
+           <li><a href="index.html">MAIN LOBBY</a></li>
+           <li><a href="index2.html">ENTERTAINMENT LOUNGE</a></li>
+           <li><a href="index3.html">EXHIBIT AREA</a></li>
+           <li><a href="index8.html">NETWORKING</a></li>
+           <li><a href="index9.html">SESSION HALL</a></li>
+           <li><a onclick="openFullscreen();">FULL PAGE VIEW</a></li>
+        </ul>
+     </div>
+     <script>
+        $(document).ready(function(){
+          $('.button').click(function(){
+            if($(this).hasClass('expand')){
+              $('ul').slideUp(function(){
+                $('.button').removeClass('expand');
+                $('.fas').removeClass('expand')
+              });
+            }else{
+              $(this).addClass('expand');
+              setTimeout(function(){
+                $('.fas').addClass('expand');
+                $('ul').stop().slideDown();
+              },200);
+            }
+          });
+        });
+     </script>
+
+
+	<h1 class="welcome">Welcome to Chat Room</h1>
+	<input id="userName" type="text" placeholder="Place enter your name here" class="userNameBar" />
+	<button id="joinButton" class="btn btn-primary joinButton" onclick="joinRoom()">Join</button>
+	
+	<script type="text/javascript">
+		function joinRoom() { debugger;
+			var uuid = $('#userName').val();
+			window.location = 'ChatRoom.html?uuid=' + uuid; 
+		}
+	</script>
+</body>
+</html>
