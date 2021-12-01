@@ -7,9 +7,10 @@ $date=date('F j, Y g:i:a');
 $servername = "sql6.freesqldatabase.com";
 $username = "sql6455593";
 $password = "Txh2DzXMT2";
+$port = "3306";
 
 // Create connection
-$conn = new mysqli($servername, $username, $password);
+$conn = new mysqli($servername, $username, $password, $port);
 
 // Check connection
 if ($conn->connect_error) {
